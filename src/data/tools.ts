@@ -70,12 +70,12 @@ export const tools: Tool[] = [
   {
     id: "csv-explorer",
     name: "CSV Explorer",
-    description: "Validate, preview, and transform CSV/TSV files in the browser.",
+    description: "Profile messy CSVs, detect quality issues, and generate BigQuery + dbt schemas.",
     category: "Exploration",
     tags: ["CSV", "Data", "Client-side"],
     icon: "Table",
     href: "/csv-explorer",
-    status: "soon",
+    status: "beta",
   },
   {
     id: "regex-sandbox",
