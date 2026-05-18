@@ -12,8 +12,11 @@ The original vision was a simple landing page (`smathr.com`) that pointed to man
 
 **Current direction (2026)**:
 - We follow a **hybrid model**:
-  - Simple, client-only tools (validators, formatters, explorers) are built **inside this Next.js app** as first-class routes (`/json-validator`, `/yaml-validator`, etc.).
+  - Simple, client-only tools (validators, formatters, explorers) are built **inside this Next.js app** as first-class routes (`/json-validator`, `/yaml-validator`, `/csv-explorer`, etc.).
   - Heavier or backend-dependent tools may still live on subdomains.
+- The app is deployed to **Cloud Run** (currently in `europe-west1`) using **Terraform** and **GitHub Actions** (OIDC).
+- DNS is managed in **Cloudflare**.
+- A Global Load Balancer module exists in Terraform but is currently commented out (we moved to a supported region instead to avoid LB cost). It can be re-enabled later if subdomains or advanced routing are needed.
 - The main site (`/`) acts as both a **marketing hub** and a **tool directory**.
 
 Goal: Fast, private, no-sign-up, delightful micro-tools that remove daily friction for data engineers.
@@ -28,6 +31,10 @@ Goal: Fast, private, no-sign-up, delightful micro-tools that remove daily fricti
 | JSON Validator          | `/json-validator` (beta)                    | Live validation, repair via jsonrepair, tree view, samples |
 | YAML Validator          | `/yaml-validator` (beta)                    | Live parsing with js-yaml, tree view, samples |
 | CSV Explorer            | `/csv-explorer` (beta)                      | Data preview table, profiling, type overrides, BigQuery + dbt schema generation |
+| Hosting                 | Cloud Run (europe-west1)                    | Deployed via Terraform + GitHub Actions |
+| DNS                     | Cloudflare                                  | Used for custom domains and future flexibility |
+| Infrastructure          | Terraform (GCS remote state)                | Manages Cloud Run, Artifact Registry, IAM, OIDC |
+| CI/CD                   | GitHub Actions (OIDC)                       | Deploys on push to `main` |
 | Other tools             | Listed in `src/data/tools.ts`               | See the tools catalog |
 | Design System           | Tailwind + custom classes                   | Dark mode via `prefers-color-scheme` |
 
@@ -56,7 +63,7 @@ src/
 │   ├── layout.tsx              # Root layout + metadata
 │   ├── page.tsx                # Main landing page (filterable tool directory)
 │   ├── globals.css
-│   └── [tool-name]/            # Individual tool pages (e.g. json-validator/, csv-explorer/)
+│   └── [tool-name]/            # Individual tool pages (e.g. json-validator/, yaml-validator/, csv-explorer/)
 │       └── page.tsx
 ├── components/
 │   ├── Navbar.tsx              # Shared sticky navbar
@@ -67,6 +74,10 @@ src/
 ├── lib/
 │   └── csv.ts                  # Shared analysis logic (type inference, schema generators, etc.)
 ```
+
+**Infrastructure** lives in the `terraform/` directory (not under `src/`):
+- Manages Cloud Run, Artifact Registry, IAM, and OIDC (Workload Identity Federation)
+- A Load Balancer module exists but is currently commented out.
 
 ### Adding a New Tool — Recommended Flow
 
@@ -123,10 +134,11 @@ Always run `npm run build` before considering a feature complete.
 
 ## 8. Current Open Questions / Roadmap
 
+- Add custom domain (`smathr.com` + `www.smathr.com`) via Cloud Run native mapping (after region move to europe-west1)
 - Improve type inference and schema quality in CSV Explorer
 - Add more data engineering tools (Regex Sandbox, SQL Formatter, etc.)
 - Consider adding light client-side transformations to CSV Explorer
-- Decide final hosting strategy for more complex tools
+- Re-enable Global Load Balancer + Cloud CDN if/when subdomains are needed
 - Potential future: better shared component library between tools
 - Personal branding / About section depth
 
@@ -144,6 +156,6 @@ See the landing page "Roadmap" section and `src/data/tools.ts` for the latest li
 
 ---
 
-**Last updated**: Late 2026 — after CSV Explorer launch (with Data Preview table, profiling, and schema generation).
+**Last updated**: Late 2026 — after deciding to move Cloud Run to europe-west1 (Belgium) for native custom domain support instead of using a Global Load Balancer (cost reasons). Current stack: Terraform + GitHub Actions (OIDC) + Cloud Run + Cloudflare DNS.
 
-When making significant changes (new tools, major refactors, new patterns in `src/lib/`), please update this file.
+When making significant changes (new tools, infrastructure changes, Terraform updates, CI/CD changes), please update this file.

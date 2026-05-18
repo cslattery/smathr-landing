@@ -1,0 +1,77 @@
+name: Deploy to Cloud Run (main)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  PROJECT_ID: smathr-dev
+  REGION: europe-west1   # Belgium - supports native custom domain mapping
+  SERVICE_NAME: smathr-landing
+  ARTIFACT_REGISTRY: smathr-images
+  TERRAFORM_DIR: terraform
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # Required for OIDC
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Authenticate to Google Cloud using OIDC (Workload Identity Federation)
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          # This value will be output by Terraform after the first apply.
+          # Example: projects/123456789/locations/global/workloadIdentityPools/github/providers/github
+          workload_identity_provider: "projects/REPLACE_WITH_PROJECT_NUMBER/locations/global/workloadIdentityPools/github/providers/github"
+          service_account: "github-actions@smathr-dev.iam.gserviceaccount.com"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY }}/${{ env.SERVICE_NAME }}:main-${{ github.sha }}"
+          docker build --platform linux/amd64 -t $IMAGE .
+          docker push $IMAGE
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+
+      - name: Terraform Init
+        working-directory: ${{ env.TERRAFORM_DIR }}
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ${{ env.TERRAFORM_DIR }}
+        run: |
+          terraform plan \
+            -var="image=${{ env.IMAGE }}" \
+            -out=tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: ${{ env.TERRAFORM_DIR }}
+        run: terraform apply -auto-approve tfplan
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "✅ Deployment completed successfully"
+          echo "Image: ${{ env.IMAGE }}"
+          echo "Service: ${{ env.SERVICE_NAME }}"

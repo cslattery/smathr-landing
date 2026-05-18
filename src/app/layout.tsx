@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   title: "Smathr | Smart Tools for Data Engineers",
   description: "Free, private, browser-based tools for data engineers. JSON & YAML validators, formatters, and more — no sign-up required.",
   icons: {
-    icon: "/favicon.ico",
+    icon: { url: "/icon.svg", type: "image/svg+xml" },
+    apple: "/icon.svg",
   },
   openGraph: {
     title: "Smathr — Smart Tools for Data Engineers",
