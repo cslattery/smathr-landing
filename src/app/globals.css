@@ -1,9 +1,125 @@
-body {
-  background-color: #f8f9fa;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base tweaks for data-tool aesthetic */
+:root {
+  --card-bg: #ffffff;
+  --card-border: #e4e4e7;
 }
 
-.tool-card-deck {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+.dark {
+  --card-bg: #18181b;
+  --card-border: #27272a;
+}
+
+body {
+  font-feature-settings: "rlig" 1, "kern" 1;
+}
+
+/* Tool card styles */
+.tool-card {
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.tool-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  border-color: #a1a1aa;
+}
+
+.dark .tool-card:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2);
+  border-color: #3f3f46;
+}
+
+/* Category pill */
+.pill {
+  @apply px-3 py-1 text-xs font-medium rounded-full border transition-colors cursor-pointer select-none;
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+  color: #3f3f46;
+}
+
+.dark .pill {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #a1a1aa;
+}
+
+.pill:hover {
+  background: #e4e4e7;
+}
+
+.dark .pill:hover {
+  background: #3f3f46;
+}
+
+.pill-active {
+  background: #18181b !important;
+  border-color: #18181b !important;
+  color: #fff !important;
+}
+
+.dark .pill-active {
+  background: #f4f4f5 !important;
+  border-color: #f4f4f5 !important;
+  color: #18181b !important;
+}
+
+/* Status badges */
+.badge {
+  @apply inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded;
+}
+
+.badge-live {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.dark .badge-live {
+  background: #14532d;
+  color: #86efac;
+}
+
+.badge-beta {
+  background: #fef3c7;
+  color: #854d0e;
+}
+
+.dark .badge-beta {
+  background: #451a03;
+  color: #fcd34d;
+}
+
+.badge-soon {
+  background: #f3e8ff;
+  color: #581c87;
+}
+
+.dark .badge-soon {
+  background: #3b0764;
+  color: #c084fc;
+}
+
+/* Search input */
+.search-input {
+  @apply w-full max-w-md rounded-lg border bg-white px-4 py-2 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:bg-zinc-900 dark:border-zinc-800;
+}
+
+.dark .search-input {
+  background: #18181b;
+}
+
+/* JSON Validator tool buttons */
+.tool-btn {
+  @apply inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium
+         hover:bg-zinc-50 active:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800;
+}
+
+.tool-btn-sm {
+  @apply inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-xs font-medium
+         hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800;
 }
