@@ -20,15 +20,16 @@ Goal: Fast, private, no-sign-up, delightful micro-tools that remove daily fricti
 
 ---
 
-## 2. Current State (as of May 2026)
+## 2. Current State (as of late 2026)
 
-| Area                    | Status                          | Notes |
-|-------------------------|----------------------------------|-------|
-| Landing Page            | Complete & modern               | Filterable directory with search + categories |
-| JSON Validator          | Live at `/json-validator` (beta) | Full-featured: live validation, repair, tree view, samples |
-| YAML Validator          | Planned                         | Next priority after JSON |
-| Other tools             | Listed in roadmap               | See `src/data/tools.ts` |
-| Design System           | Tailwind + custom classes       | Dark mode via `prefers-color-scheme` |
+| Area                    | Status                                      | Notes |
+|-------------------------|---------------------------------------------|-------|
+| Landing Page            | Complete & modern                           | Filterable directory with search + categories |
+| JSON Validator          | `/json-validator` (beta)                    | Live validation, repair via jsonrepair, tree view, samples |
+| YAML Validator          | `/yaml-validator` (beta)                    | Live parsing with js-yaml, tree view, samples |
+| CSV Explorer            | `/csv-explorer` (beta)                      | Data preview table, profiling, type overrides, BigQuery + dbt schema generation |
+| Other tools             | Listed in `src/data/tools.ts`               | See the tools catalog |
+| Design System           | Tailwind + custom classes                   | Dark mode via `prefers-color-scheme` |
 
 ---
 
@@ -38,7 +39,9 @@ Goal: Fast, private, no-sign-up, delightful micro-tools that remove daily fricti
 - **Styling**: Tailwind CSS 3 + custom utilities in `globals.css`
 - **Icons**: `lucide-react`
 - **Key libraries**:
-  - `jsonrepair` — used heavily for forgiving JSON parsing
+  - `jsonrepair` — forgiving JSON parsing (JSON Validator)
+  - `js-yaml` — YAML parsing (YAML Validator)
+  - `papaparse` — robust CSV parsing (CSV Explorer)
 - No heavy component libraries (no shadcn/ui, no Radix yet)
 
 **Important**: Keep the bundle light. The landing page should feel fast.
@@ -53,15 +56,16 @@ src/
 │   ├── layout.tsx              # Root layout + metadata
 │   ├── page.tsx                # Main landing page (filterable tool directory)
 │   ├── globals.css
-│   └── [tool-name]/            # Individual tool pages (e.g. json-validator/)
+│   └── [tool-name]/            # Individual tool pages (e.g. json-validator/, csv-explorer/)
 │       └── page.tsx
 ├── components/
 │   ├── Navbar.tsx              # Shared sticky navbar
 │   ├── Hero.tsx, ToolCard.tsx, ToolFilters.tsx
-│   └── [tool-name]/            # Tool-specific components
-│       └── JsonTreeView.tsx
+│   └── DataTreeView.tsx        # Reusable tree viewer (used by JSON + YAML validators)
 ├── data/
 │   └── tools.ts                # ← SINGLE SOURCE OF TRUTH for all tools
+├── lib/
+│   └── csv.ts                  # Shared analysis logic (type inference, schema generators, etc.)
 ```
 
 ### Adding a New Tool — Recommended Flow
@@ -69,8 +73,9 @@ src/
 1. Add the tool definition in **`src/data/tools.ts`** (very important).
 2. Create a new route: `src/app/your-tool/page.tsx`
 3. (Optional) Create tool-specific components under `src/components/your-tool/`
-4. Update status from `"soon"` → `"beta"` → `"live"` as it matures.
-5. Consider whether the tool belongs on the main domain or a subdomain.
+4. For complex analysis/parsing logic, consider adding shared utilities under `src/lib/`
+5. Update status from `"soon"` → `"beta"` → `"live"` as it matures.
+6. Consider whether the tool belongs on the main domain or a subdomain.
 
 ---
 
@@ -118,8 +123,9 @@ Always run `npm run build` before considering a feature complete.
 
 ## 8. Current Open Questions / Roadmap
 
-- Full JSON Schema validation (AJV) in the JSON Validator
-- YAML Validator implementation (high priority)
+- Improve type inference and schema quality in CSV Explorer
+- Add more data engineering tools (Regex Sandbox, SQL Formatter, etc.)
+- Consider adding light client-side transformations to CSV Explorer
 - Decide final hosting strategy for more complex tools
 - Potential future: better shared component library between tools
 - Personal branding / About section depth
@@ -138,6 +144,6 @@ See the landing page "Roadmap" section and `src/data/tools.ts` for the latest li
 
 ---
 
-**Last updated**: May 2026 — after JSON Validator v1 launch.
+**Last updated**: Late 2026 — after CSV Explorer launch (with Data Preview table, profiling, and schema generation).
 
-When making significant changes, please update this file.
+When making significant changes (new tools, major refactors, new patterns in `src/lib/`), please update this file.
