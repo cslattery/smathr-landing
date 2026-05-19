@@ -26,9 +26,8 @@ resource "google_iam_workload_identity_pool_provider" "github" {
     "attribute.ref"        = "assertion.ref"
   }
 
-  # Restrict to the specific repository on main branch
-  attribute_condition = "assertion.repository == \"${var.github_repository}\" && assertion.ref == \"refs/heads/main\""
-
+  # Only trust this specific repository (we control what jobs can do via GitHub Actions)
+  attribute_condition = "assertion.repository == \"${var.github_repository}\""
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }
