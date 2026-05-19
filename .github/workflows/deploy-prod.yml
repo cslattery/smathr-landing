@@ -1,0 +1,88 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  PROJECT_ID: smathr-dev
+  REGION: europe-west1
+  SERVICE_NAME: smathr-landing
+  ARTIFACT_REGISTRY: smathr-images
+  TERRAFORM_DIR: terraform
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud (OIDC)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/${{ vars.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github/providers/github"
+          service_account: "${{ vars.GCP_GITHUB_ACTIONS_SA }}"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Generate image tags
+        id: tags
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          IMAGE_BASE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY }}/${{ env.SERVICE_NAME }}"
+          echo "image_base=${IMAGE_BASE}" >> $GITHUB_OUTPUT
+          echo "sha_tag=main-${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "latest_tag=latest" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE_BASE="${{ steps.tags.outputs.image_base }}"
+          SHA_TAG="${{ steps.tags.outputs.sha_tag }}"
+          LATEST_TAG="${{ steps.tags.outputs.latest_tag }}"
+
+          docker build --platform linux/amd64 \
+            -t "${IMAGE_BASE}:${SHA_TAG}" \
+            -t "${IMAGE_BASE}:${LATEST_TAG}" .
+
+          docker push "${IMAGE_BASE}:${SHA_TAG}"
+          docker push "${IMAGE_BASE}:${LATEST_TAG}"
+
+          echo "IMAGE=${IMAGE_BASE}:${SHA_TAG}" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+
+      - name: Terraform Init
+        working-directory: ${{ env.TERRAFORM_DIR }}
+        run: terraform init
+
+      - name: Create tfvars file with image
+        working-directory: ${{ env.TERRAFORM_DIR }}
+        run: |
+          echo 'image = "${{ env.IMAGE }}"' > deploy.tfvars
+
+      - name: Terraform Apply
+        working-directory: ${{ env.TERRAFORM_DIR }}
+        run: |
+          terraform apply -var-file=deploy.tfvars -auto-approve
+
+      - name: Deployment Summary
+        run: |
+          echo "✅ Production deployment completed"
+          echo "Image deployed: ${{ env.IMAGE }}"

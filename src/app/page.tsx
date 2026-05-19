@@ -1,67 +1,157 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useMemo, useState } from "react";
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { ToolFilters } from "@/components/ToolFilters";
+import { ToolCard } from "@/components/ToolCard";
+import { tools, ToolCategory, categories } from "@/data/tools";
 
-  const tools = [
-    {
-      name: "YAML Validator",
-      description: "Validate your YAML files for syntax and structure.",
-      icon: "bi-check-circle",
-      url: "https://yaml-validator.smathr.com"
-    },
-    {
-      name: "JSON Validator",
-      description: "Validate your JSON data against a schema.",
-      icon: "bi-file-earmark-code",
-      url: "https://json-validator.smathr.com"
-    },
-    {
-      name: "GCloud Finisher",
-      description: "AI powered gcloud command completion.",
-      icon: "bi-google",
-      url: "https://gcloud-finisher.smathr.com"
-    }
-  ];
+export default function SmathrLanding() {
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState<ToolCategory | "All">("All");
+
+  const filteredTools = useMemo(() => {
+    return tools.filter((tool) => {
+      const matchesSearch =
+        tool.name.toLowerCase().includes(search.toLowerCase()) ||
+        tool.description.toLowerCase().includes(search.toLowerCase()) ||
+        tool.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
+
+      const matchesCategory =
+        activeCategory === "All" || tool.category === activeCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [search, activeCategory]);
 
   return (
     <>
-      <header className="bg-dark text-white text-center py-3 mb-5">
-        <div className="container">
-          <h1 className="display-4">Smathr.com</h1>
-        </div>
-      </header>
+      <Navbar />
 
-      <main className="container">
-        <div className="text-center mb-5">
-          <h2 className="display-5">Smart Tools for Data Engineers</h2>
-          <p className="lead">A curated collection of web applications to streamline your engineering workflows.</p>
-        </div>
+      <main>
+        {/* Hero */}
+        <section className="border-b border-zinc-200 bg-white py-20 dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="mx-auto max-w-6xl px-6">
+            <Hero />
+          </div>
+        </section>
 
-        <div className="row justify-content-center">
-          <div className="col-lg-10">
-            <div className="tool-card-deck">
-              {tools.map((tool) => (
-                <div key={tool.name} className="card shadow-sm">
-                  <div className="card-body text-center">
-                    <div className="mb-3">
-                      <i className={`bi ${tool.icon} fs-1 text-primary`}></i>
-                    </div>
-                    <h5 className="card-title">{tool.name}</h5>
-                    <p className="card-text text-muted">{tool.description}</p>
-                    <a href={tool.url} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                      Launch Tool
-                    </a>
-                  </div>
+        {/* Tools Directory */}
+        <section id="tools" className="mx-auto max-w-6xl px-6 py-16">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-semibold tracking-tight">All tools</h2>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+              Everything you need for daily data work — right in your browser.
+            </p>
+          </div>
+
+          <ToolFilters
+            search={search}
+            setSearch={setSearch}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+          />
+
+          {filteredTools.length > 0 ? (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {filteredTools.map((tool) => (
+                <ToolCard key={tool.id} tool={tool} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed p-12 text-center text-zinc-500 dark:border-zinc-800">
+              No tools match your search. Try a different term or category.
+            </div>
+          )}
+
+          <div className="mt-10 text-center text-xs text-zinc-500 dark:text-zinc-500">
+            New tools added regularly. Missing something?{" "}
+            <a href="mailto:hello@smathr.com?subject=Tool%20request" className="underline hover:text-primary-600">
+              Let us know
+            </a>
+            .
+          </div>
+        </section>
+
+        {/* Value Props */}
+        <section className="border-t border-zinc-200 bg-zinc-50 py-16 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mb-10 text-center">
+              <h3 className="text-2xl font-semibold tracking-tight">Why these tools exist</h3>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-3">
+              {[
+                {
+                  title: "Private by default",
+                  desc: "All validation, formatting, and transforms happen in your browser. Nothing is uploaded or logged.",
+                },
+                {
+                  title: "Instant feedback",
+                  desc: "No waiting for a backend, no sign-up, no rate limits. Open a tool and start working immediately.",
+                },
+                {
+                  title: "Built by practitioners",
+                  desc: "Every utility solves a real friction the author hits while writing pipelines, dbt models, and Airflow DAGs.",
+                },
+              ].map((prop, i) => (
+                <div key={i} className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
+                  <h4 className="mb-2 font-semibold">{prop.title}</h4>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">{prop.desc}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Roadmap */}
+        <section id="roadmap" className="mx-auto max-w-6xl px-6 py-16">
+          <div className="mb-10 text-center">
+            <h3 className="text-2xl font-semibold tracking-tight">Roadmap</h3>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-400">What we’re working on next</p>
+          </div>
+
+          <div className="mx-auto max-w-2xl space-y-4 text-sm">
+            {[
+              { q: "Q2 2025", item: "JSON & YAML validators with schema support and sample generators" },
+              { q: "Q2 2025", item: "CSV/TSV explorer + Parquet preview (client-side)" },
+              { q: "Q3 2025", item: "GCloud Finisher v1 on its own subdomain (AI command helper)" },
+              { q: "Q3 2025", item: "Regex & log parsing sandbox with common data patterns" },
+              { q: "Ongoing", item: "More one-off utilities requested by the community" },
+            ].map((r, idx) => (
+              <div key={idx} className="flex gap-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+                <div className="w-20 shrink-0 font-mono text-xs text-primary-600 dark:text-primary-400">{r.q}</div>
+                <div>{r.item}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* About */}
+        <section id="about" className="border-t border-zinc-200 bg-white py-16 dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="mx-auto max-w-3xl px-6 text-center">
+            <h3 className="mb-4 text-2xl font-semibold tracking-tight">About Smathr</h3>
+            <p className="text-zinc-600 dark:text-zinc-400">
+              Smathr is a personal collection of lightweight, high-quality tools I wish I had while doing data work.
+              The goal is simple: remove the tiny frictions that slow engineers down every day.
+            </p>
+            <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-500">
+              Built in public. Feedback and tool ideas are always welcome — just email or open an issue.
+            </p>
+
+            <div className="mt-6 flex justify-center gap-4 text-sm">
+              <a href="https://github.com/smathr" target="_blank" rel="noopener" className="underline hover:text-primary-600">GitHub</a>
+              <a href="mailto:hello@smathr.com" className="underline hover:text-primary-600">Contact</a>
+            </div>
+          </div>
+        </section>
       </main>
 
-      <footer className="text-center text-muted py-4 mt-5 bg-light">
-        <div className="container">
-          <p>&copy; {new Date().getFullYear()} Smathr.com. All Rights Reserved.</p>
+      {/* Footer */}
+      <footer className="border-t border-zinc-200 bg-white py-8 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-500">
+        <div className="mx-auto max-w-6xl px-6">
+          © {new Date().getFullYear()} Smathr — Made for data engineers who value their time and their data.
         </div>
       </footer>
     </>
