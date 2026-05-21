@@ -38,7 +38,6 @@ jobs:
         working-directory: terraform
         run: |
           terraform plan \
-            -var-file=terraform.tfvars \
             -var="image=europe-west1-docker.pkg.dev/smathr-dev/smathr-images/smathr-landing:latest" \
             -out=tfplan
 
