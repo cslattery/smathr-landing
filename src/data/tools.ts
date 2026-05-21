@@ -79,12 +79,12 @@ export const tools: Tool[] = [
   {
     id: "sql-formatter",
     name: "SQL Formatter",
-    description: "Pretty-print and lint SQL queries with dbt / BigQuery dialect support.",
+    description: "Pretty-print and lint SQL queries with dbt / BigQuery dialect support and customizable style.",
     category: "Formatting",
     tags: ["SQL", "dbt", "BigQuery"],
     icon: "Database",
     href: "/sql-formatter",
-    status: "soon",
+    status: "beta",
   },
 ];
 

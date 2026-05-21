@@ -116,8 +116,7 @@ export default function SmathrLanding() {
             {[
               { q: "Q2 2025", item: "JSON & YAML validators with schema support and sample generators" },
               { q: "Q2 2025", item: "CSV/TSV explorer + Parquet preview (client-side)" },
-              { q: "Now", item: "GCloud Command Explorer + JSON ↔ YAML converter" },
-              { q: "Next", item: "SQL Formatter with dbt / BigQuery dialect support" },
+              { q: "Now", item: "GCloud Command Explorer + JSON ↔ YAML converter + SQL Formatter" },
               { q: "Ongoing", item: "More one-off utilities requested by the community" },
             ].map((r, idx) => (
               <div key={idx} className="flex gap-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
