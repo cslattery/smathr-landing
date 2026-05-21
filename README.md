@@ -6,13 +6,16 @@ Smathr is a personal collection of lightweight utilities built to remove daily f
 
 ## Current Tools
 
-- **[JSON Validator](/json-validator)** — Validate, format, repair, and explore JSON with live validation and tree view (beta)
-- **[YAML Validator](/yaml-validator)** — Parse, format, and explore YAML configs with tree view (beta)
-- **[CSV Explorer](/csv-explorer)** — Profile sample CSVs, handle messy delimiters/nulls, and generate BigQuery + dbt schemas (beta)
+- **[JSON Validator](/json-validator)** — Validate, format, repair, and explore JSON (beta)
+- **[YAML Validator](/yaml-validator)** — Parse and format YAML configs (beta)
+- **[GCloud Command Explorer](/gcloud-explorer)** — Interactive builder for gcloud CLI commands with live suggestions (beta)
+- **[JSON ↔ YAML](/json-yaml)** — Bidirectional converter with Pretty, Minified, and One Line modes (beta)
+- **[CSV Explorer](/csv-explorer)** — Profile CSVs and generate BigQuery + dbt schemas (beta)
+- **[SQL Formatter](/sql-formatter)** — Pretty-print, minify, and one-line SQL with dialect support (BigQuery, Postgres, Snowflake, etc.) (beta)
 
 The site is deployed on **Google Cloud Run** (Terraform + GitHub Actions) with DNS managed in **Cloudflare**.
 
-More tools are planned and listed on the [live site](https://smathr.com).
+All tools are listed on the [live site](https://smathr.com).
 
 ## Philosophy
 

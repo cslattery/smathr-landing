@@ -30,7 +30,10 @@ Goal: Fast, private, no-sign-up, delightful micro-tools that remove daily fricti
 | Landing Page            | Complete & modern                           | Filterable directory with search + categories |
 | JSON Validator          | `/json-validator` (beta)                    | Live validation, repair via jsonrepair, tree view, samples |
 | YAML Validator          | `/yaml-validator` (beta)                    | Live parsing with js-yaml, tree view, samples |
+| GCloud Command Explorer | `/gcloud-explorer` (beta)                   | Interactive CLI explorer with live subcommand + flag suggestions |
+| JSON ↔ YAML             | `/json-yaml` (beta)                         | Bidirectional converter with Pretty / Minified / One Line modes |
 | CSV Explorer            | `/csv-explorer` (beta)                      | Data preview table, profiling, type overrides, BigQuery + dbt schema generation |
+| SQL Formatter           | `/sql-formatter` (beta)                     | Pretty-print + Minify + One Line modes, multiple dialects (BigQuery, Postgres, Snowflake, etc.) |
 | Hosting                 | Cloud Run (europe-west1)                    | Deployed via Terraform + GitHub Actions |
 | DNS                     | Cloudflare                                  | Used for custom domains and future flexibility |
 | Infrastructure          | Terraform (GCS remote state)                | Manages Cloud Run, Artifact Registry, IAM, OIDC |
@@ -49,6 +52,7 @@ Goal: Fast, private, no-sign-up, delightful micro-tools that remove daily fricti
   - `jsonrepair` — forgiving JSON parsing (JSON Validator)
   - `js-yaml` — YAML parsing (YAML Validator)
   - `papaparse` — robust CSV parsing (CSV Explorer)
+  - `sql-formatter` — SQL formatting with dialect + style options (SQL Formatter)
 - No heavy component libraries (no shadcn/ui, no Radix yet)
 
 **Important**: Keep the bundle light. The landing page should feel fast.
@@ -72,7 +76,8 @@ src/
 ├── data/
 │   └── tools.ts                # ← SINGLE SOURCE OF TRUTH for all tools
 ├── lib/
-│   └── csv.ts                  # Shared analysis logic (type inference, schema generators, etc.)
+│   ├── csv.ts                  # CSV analysis, type inference, schema generators
+│   └── gcloud.ts               # GCloud command tree + formatting helpers (GCloud Explorer)
 ```
 
 **Infrastructure** lives in the `terraform/` directory (not under `src/`):
@@ -134,9 +139,9 @@ Always run `npm run build` before considering a feature complete.
 
 ## 8. Current Open Questions / Roadmap
 
-- Add custom domain (`smathr.com` + `www.smathr.com`) via Cloud Run native mapping (after region move to europe-west1)
+- Add custom domain (`smathr.com` + `www.smathr.com`) via Cloud Run native mapping
 - Improve type inference and schema quality in CSV Explorer
-- Add more data engineering tools (Regex Sandbox, SQL Formatter, etc.)
+- Add more data engineering tools (Regex Sandbox was removed; more formatters/explorers planned)
 - Consider adding light client-side transformations to CSV Explorer
 - Re-enable Global Load Balancer + Cloud CDN if/when subdomains are needed
 - Potential future: better shared component library between tools
@@ -156,6 +161,6 @@ See the landing page "Roadmap" section and `src/data/tools.ts` for the latest li
 
 ---
 
-**Last updated**: Late 2026 — after deciding to move Cloud Run to europe-west1 (Belgium) for native custom domain support instead of using a Global Load Balancer (cost reasons). Current stack: Terraform + GitHub Actions (OIDC) + Cloud Run + Cloudflare DNS.
+**Last updated**: 2026 — after adding GCloud Command Explorer, JSON ↔ YAML Converter, and SQL Formatter (with Pretty/Minified/One Line modes). Regex Sandbox placeholder was removed. Current stack: Terraform + GitHub Actions (OIDC) + Cloud Run (europe-west1) + Cloudflare DNS.
 
 When making significant changes (new tools, infrastructure changes, Terraform updates, CI/CD changes), please update this file.
