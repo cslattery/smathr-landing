@@ -116,7 +116,7 @@ export default function SmathrLanding() {
             {[
               { q: "Q2 2025", item: "JSON & YAML validators with schema support and sample generators" },
               { q: "Q2 2025", item: "CSV/TSV explorer + Parquet preview (client-side)" },
-              { q: "Q3 2025", item: "GCloud Finisher v1 on its own subdomain (AI command helper)" },
+              { q: "Now", item: "GCloud Command Explorer — interactive, client-side gcloud argument builder" },
               { q: "Q3 2025", item: "Regex & log parsing sandbox with common data patterns" },
               { q: "Ongoing", item: "More one-off utilities requested by the community" },
             ].map((r, idx) => (
