@@ -34,12 +34,19 @@ jobs:
         working-directory: terraform
         run: terraform init
 
+      - name: Terraform Format Check
+        working-directory: terraform
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        working-directory: terraform
+        run: terraform validate
+
       - name: Terraform Plan
         working-directory: terraform
         run: |
           terraform plan \
-            -var-file=terraform.tfvars \
-            -var="image=europe-west1-docker.pkg.dev/smathr-dev/smathr-images/smathr-landing:latest" \
+            -var="image=europe-west1-docker.pkg.dev/smathr-dev/smathr-images/smathr-landing:pr-${{ github.event.pull_request.number }}" \
             -out=tfplan
 
       - name: Post Plan to PR
@@ -58,7 +65,7 @@ jobs:
             ${plan}
             \`\`\`
 
-            **Note:** Full plan output is available in the GitHub Actions logs.`;
+            **Note:** Full plan output (including resource changes) is available in the GitHub Actions logs.`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,

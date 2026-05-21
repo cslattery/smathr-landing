@@ -30,12 +30,12 @@ resource "google_compute_region_network_endpoint_group" "cloud_run" {
 
 # Backend Service
 resource "google_compute_backend_service" "default" {
-  name                  = "${var.service_name}-backend"
-  project               = var.project_id
-  protocol              = "HTTP"
-  port_name             = "http"
-  timeout_sec           = 30
-  enable_cdn            = false # Enable later if needed
+  name        = "${var.service_name}-backend"
+  project     = var.project_id
+  protocol    = "HTTP"
+  port_name   = "http"
+  timeout_sec = 30
+  enable_cdn  = false # Enable later if needed
 
   backend {
     group = google_compute_region_network_endpoint_group.cloud_run.id

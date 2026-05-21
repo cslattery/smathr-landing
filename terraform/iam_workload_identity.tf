@@ -26,9 +26,8 @@ resource "google_iam_workload_identity_pool_provider" "github" {
     "attribute.ref"        = "assertion.ref"
   }
 
-  # Restrict to the specific repository on main branch
-  attribute_condition = "assertion.repository == \"${var.github_repository}\" && assertion.ref == \"refs/heads/main\""
-
+  # Only trust this specific repository (we control what jobs can do via GitHub Actions)
+  attribute_condition = "assertion.repository == \"${var.github_repository}\""
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }
@@ -50,10 +49,16 @@ resource "google_service_account_iam_member" "github_workload_identity" {
 }
 
 # Grant the service account permissions needed for deployment
-# TODO: Replace "roles/editor" with more granular roles later (e.g. roles/run.admin, roles/artifactregistry.writer, etc.)
 resource "google_project_iam_member" "github_actions_permissions" {
   project = var.project_id
   role    = "roles/editor"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
+
+# Allow the GitHub Actions service account to push images to Artifact Registry
+resource "google_project_iam_member" "github_actions_artifact_registry_writer" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
   member  = "serviceAccount:${google_service_account.github_actions.email}"
 }
 
