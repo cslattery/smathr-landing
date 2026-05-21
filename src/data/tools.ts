@@ -64,7 +64,7 @@ export const tools: Tool[] = [
     tags: ["JSON", "YAML", "Convert"],
     icon: "ArrowLeftRight",
     href: "/json-yaml",
-    status: "soon",
+    status: "beta",
   },
   {
     id: "csv-explorer",
@@ -75,16 +75,6 @@ export const tools: Tool[] = [
     icon: "Table",
     href: "/csv-explorer",
     status: "beta",
-  },
-  {
-    id: "regex-sandbox",
-    name: "Regex Sandbox",
-    description: "Test log parsing and extraction patterns with live highlighting.",
-    category: "Utilities",
-    tags: ["Regex", "Logs", "Parsing"],
-    icon: "SearchCode",
-    href: "/regex-sandbox",
-    status: "soon",
   },
   {
     id: "sql-formatter",
