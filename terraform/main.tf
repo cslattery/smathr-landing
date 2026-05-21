@@ -22,7 +22,7 @@ module "cloud_run" {
   environment           = var.environment
   service_account_email = google_service_account.cloud_run.email
 
-  # Image will be updated by CI/CD. Falls back to :latest if not provided.
+  # Image is passed from CI/CD (via deploy.tfvars). Falls back to :latest for local use.
   image = var.image != "" ? var.image : "${var.region}-docker.pkg.dev/${var.project_id}/${var.artifact_registry_repository}/${var.service_name}:latest"
 
   depends_on = [module.artifact_registry]
