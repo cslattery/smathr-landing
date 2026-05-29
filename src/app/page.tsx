@@ -72,6 +72,20 @@ export default function SmathrLanding() {
             </a>
             .
           </div>
+
+          {/* CLI teaser */}
+          <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-5 text-center dark:border-zinc-800 dark:bg-zinc-950">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <span className="font-medium text-zinc-900 dark:text-white">Smathr CLI is now available</span> — built first for AI agents.
+              Use the same tools from your terminal with excellent structured output.
+            </p>
+            <a
+              href="/cli"
+              className="mt-3 inline-flex items-center rounded-lg border border-zinc-300 px-4 py-1.5 text-sm font-medium hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+            >
+              Learn more &amp; install →
+            </a>
+          </div>
         </section>
 
         {/* Value Props */}

@@ -86,6 +86,17 @@ export const tools: Tool[] = [
     href: "/sql-formatter",
     status: "beta",
   },
+  {
+    id: "smathr-cli",
+    name: "Smathr CLI",
+    description: "The same data engineering tools in your terminal. Built for AI agents with structured output. npx works today.",
+    category: "Utilities",
+    tags: ["CLI", "Agents", "Automation", "Terminal"],
+    icon: "Terminal",
+    href: "/cli",
+    status: "beta",
+    isExternal: false,
+  },
 ];
 
 export const categories: ToolCategory[] = [

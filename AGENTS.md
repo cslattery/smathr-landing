@@ -34,11 +34,12 @@ Goal: Fast, private, no-sign-up, delightful micro-tools that remove daily fricti
 | JSON ↔ YAML             | `/json-yaml` (beta)                         | Bidirectional converter with Pretty / Minified / One Line modes |
 | CSV Explorer            | `/csv-explorer` (beta)                      | Data preview table, profiling, type overrides, BigQuery + dbt schema generation |
 | SQL Formatter           | `/sql-formatter` (beta)                     | Pretty-print + Minify + One Line modes, multiple dialects (BigQuery, Postgres, Snowflake, etc.) |
+| Smathr CLI              | https://github.com/smathr/smathr-cli        | Production-ready. `validate json/yaml`, `convert`, `format sql` (8 dialects), `csv profile` + BigQuery/dbt/JSON schema generation. Excellent agent ergonomics (smart JSON, exit codes, line/col errors). Binaries + npm packaging in progress. |
 | Hosting                 | Cloud Run (europe-west1)                    | Deployed via Terraform + GitHub Actions |
 | DNS                     | Cloudflare                                  | Used for custom domains and future flexibility |
 | Infrastructure          | Terraform (GCS remote state)                | Manages Cloud Run, Artifact Registry, IAM, OIDC |
 | CI/CD                   | GitHub Actions (OIDC)                       | Deploys on push to `main` |
-| Other tools             | Listed in `src/data/tools.ts`               | See the tools catalog |
+| Other tools             | Listed in `src/data/tools.ts`               | See the tools catalog (includes external entries like the upcoming Smathr CLI) |
 | Design System           | Tailwind + custom classes                   | Dark mode via `prefers-color-scheme` |
 
 ---
@@ -146,6 +147,7 @@ Always run `npm run build` before considering a feature complete.
 - Re-enable Global Load Balancer + Cloud CDN if/when subdomains are needed
 - Potential future: better shared component library between tools
 - Personal branding / About section depth
+- **Smathr CLI** (`smathr/smathr-cli`): Core commands complete. GitHub Actions release workflow added to produce standalone binaries on every tag (using `@yao-pkg/pkg` on CI runners). Next focus: first tagged release with binaries + npm publish. See the CLI repo for details.
 
 See the landing page "Roadmap" section and `src/data/tools.ts` for the latest list of planned tools.
 
@@ -157,10 +159,11 @@ See the landing page "Roadmap" section and `src/data/tools.ts` for the latest li
 - Prefer client-side solutions. Only introduce a backend if there's a very strong reason.
 - When modifying the landing page, keep the tool grid fast and filterable.
 - The user (Christopher) values quality and taste over feature bloat.
+- **For AI agents**: The new dedicated `smathr` CLI (separate repo) is the intended long-term way to give agents access to these utilities with structured I/O. The browser tools remain excellent for humans.
 - Session-specific planning docs live in `.grok/sessions/...` — they are not part of the repo.
 
 ---
 
-**Last updated**: 2026 — after adding GCloud Command Explorer, JSON ↔ YAML Converter, and SQL Formatter (with Pretty/Minified/One Line modes). Regex Sandbox placeholder was removed. Current stack: Terraform + GitHub Actions (OIDC) + Cloud Run (europe-west1) + Cloudflare DNS.
+**Last updated**: 2026 — Smathr CLI (`smathr/smathr-cli`) now has production-quality implementations of validate (json/yaml), convert, format sql (8 dialects), and csv profile + schema generation. Strong focus on agent ergonomics. See CLI repo for details. Current stack: Terraform + GitHub Actions (OIDC) + Cloud Run (europe-west1) + Cloudflare DNS.
 
 When making significant changes (new tools, infrastructure changes, Terraform updates, CI/CD changes), please update this file.
