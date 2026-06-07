@@ -18,7 +18,7 @@ export function ToolFilters({
   setActiveCategory,
 }: ToolFiltersProps) {
   return (
-    <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       {/* Search */}
       <div className="relative w-full md:w-72">
         <Search className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />

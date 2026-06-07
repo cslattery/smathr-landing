@@ -50,19 +50,8 @@ export default function SmathrLanding() {
       <Navbar />
 
       <main>
-        <section className="border-b border-zinc-200 bg-zinc-50/50 py-10 dark:border-zinc-800 dark:bg-zinc-950">
-          <div className="mx-auto max-w-6xl px-6">
-            <Hero />
-          </div>
-        </section>
-
-        <section id="tools" className="mx-auto max-w-6xl px-6 py-16">
-          <div className="mb-8 text-center">
-            <h2 className="text-3xl font-semibold tracking-tight">All tools</h2>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-              Everything you need for daily data work — right in your browser.
-            </p>
-          </div>
+        <section id="tools" className="mx-auto max-w-6xl px-6 pb-16 pt-6">
+          <Hero />
 
           <ToolFilters
             search={search}
