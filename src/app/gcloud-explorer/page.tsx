@@ -653,8 +653,13 @@ export default function GCloudExplorerPage() {
         <div className="mt-6 text-center text-xs text-zinc-500 dark:text-zinc-500">
           Tip: Click any segment in the command bar to jump back. Use Quick Starts for realistic one-click examples.
           Want more commands (BigQuery, SQL, GKE, etc.)?{" "}
-          <a href="mailto:hello@smathr.com?subject=GCloud%20Explorer%20suggestion" className="underline hover:text-primary-600">
-            Let us know
+          <a
+            href="https://github.com/cslattery/smathr-landing/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-primary-600"
+          >
+            Open an issue
           </a>
           .
         </div>
