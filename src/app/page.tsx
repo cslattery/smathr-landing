@@ -7,7 +7,7 @@ import { Hero } from "@/components/Hero";
 import { Footer } from "@/components/Footer";
 import { ToolFilters } from "@/components/ToolFilters";
 import { ToolCard } from "@/components/ToolCard";
-import { tools, ToolCategory } from "@/data/tools";
+import { tools, FilterTag } from "@/data/tools";
 
 const VALUE_PROPS = [
   {
@@ -29,7 +29,7 @@ const VALUE_PROPS = [
 
 export default function SmathrLanding() {
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState<ToolCategory | "All">("All");
+  const [activeTag, setActiveTag] = useState<FilterTag | "All">("All");
 
   const filteredTools = useMemo(() => {
     return tools.filter((tool) => {
@@ -38,12 +38,13 @@ export default function SmathrLanding() {
         tool.description.toLowerCase().includes(search.toLowerCase()) ||
         tool.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
 
-      const matchesCategory =
-        activeCategory === "All" || tool.category === activeCategory;
+      const matchesTag =
+        activeTag === "All" ||
+        tool.tags.some((t) => t.toLowerCase() === activeTag.toLowerCase());
 
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesTag;
     });
-  }, [search, activeCategory]);
+  }, [search, activeTag]);
 
   return (
     <>
@@ -56,8 +57,8 @@ export default function SmathrLanding() {
           <ToolFilters
             search={search}
             setSearch={setSearch}
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
+            activeTag={activeTag}
+            setActiveTag={setActiveTag}
           />
 
           {filteredTools.length > 0 ? (
