@@ -71,7 +71,7 @@ export const tools: Tool[] = [
     name: "CSV Explorer",
     description: "Profile messy CSVs, detect quality issues, and generate BigQuery + dbt schemas.",
     category: "Exploration",
-    tags: ["CSV", "Data", "Client-side"],
+    tags: ["CSV", "BigQuery", "dbt", "Data"],
     icon: "Table",
     href: "/csv-explorer",
     status: "beta",
@@ -99,11 +99,5 @@ export const tools: Tool[] = [
   },
 ];
 
-export const categories: ToolCategory[] = [
-  "Validation",
-  "Transformation",
-  "Formatting",
-  "AI Assistant",
-  "Exploration",
-  "Utilities",
-];
+export const filterTags = ["SQL", "JSON", "YAML", "BigQuery", "CSV", "DBT"] as const;
+export type FilterTag = (typeof filterTags)[number];
